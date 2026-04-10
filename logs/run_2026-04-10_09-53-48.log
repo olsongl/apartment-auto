@@ -1,0 +1,13 @@
+[2026-04-10 09:53:48] === Daily scraper run started ===
+[2026-04-10 09:53:48] [apartment.py] Attempt 1/5...
+Opening: Axis at Shady Grove Apartments
+  Found 32 unit cards in HTML
+  → 32 units found
+  Waiting 5 seconds before next page...
+Opening: The Reserve at Eisenhower Apartments
+  Found 20 unit cards in HTML
+  → 20 units found
+
+Done. 52 total units written to apartments_2026-04-10.xlsx
+[2026-04-10 09:53:57] [apartment.py] Success on attempt 1.
+[2026-04-10 09:53:57] === Daily run complete: 1/1 succeeded ===
