@@ -16,8 +16,8 @@ set -euo pipefail
 # ║                     set to "none" if the script has no expected file      ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
-HOUR=10
-MINUTE=0
+# Runs every hour; the already-ran-today guard ensures it only executes once per day
+CRON_SCHEDULE="0 * * * *"
 
 SCRIPTS=(
     "apartment.py:apartments_{DATE}.xlsx"
@@ -38,7 +38,7 @@ COMMAND="${1:-run}"
 # ── install ──────────────────────────────────────────────────────────────────
 do_install() {
     chmod +x "${SCRIPT_DIR}/setup.sh"
-    CRON_LINE="${MINUTE} ${HOUR} * * * /bin/bash ${SCRIPT_DIR}/setup.sh run ${CRON_TAG}"
+    CRON_LINE="${CRON_SCHEDULE} /bin/bash \"${SCRIPT_DIR}/setup.sh\" run ${CRON_TAG}"
     ( crontab -l 2>/dev/null | grep -v "${CRON_TAG}" || true; echo "${CRON_LINE}" ) | crontab -
     echo "Cron job installed: ${CRON_LINE}"
     echo ""
@@ -46,7 +46,7 @@ do_install() {
     echo "  Check crontab : crontab -l"
     echo "  Run now       : ./setup.sh run"
     echo "  Uninstall     : ./setup.sh uninstall"
-    echo "  Change time   : edit HOUR/MINUTE in setup.sh, then re-run ./setup.sh install"
+    echo "  Change schedule: edit CRON_SCHEDULE in setup.sh, then re-run ./setup.sh install"
 }
 
 # ── uninstall ────────────────────────────────────────────────────────────────
@@ -59,8 +59,7 @@ do_uninstall() {
 do_run() {
     LOG_DIR="${SCRIPT_DIR}/logs"
     TODAY=$(date +"%Y-%m-%d")
-    TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-    LOG_FILE="${LOG_DIR}/run_${TIMESTAMP}.log"
+    LOG_FILE="${LOG_DIR}/run_${TODAY}.log"
 
     mkdir -p "${LOG_DIR}"
 
@@ -142,7 +141,7 @@ do_run() {
         fi
     done
 
-    # Rotate: keep last 30 run logs
+    # Rotate: keep last 30 daily logs
     ls -t "${LOG_DIR}"/run_*.log 2>/dev/null | tail -n +31 | xargs rm -f 2>/dev/null || true
 
     log "=== Daily run complete: ${PASSED}/${TOTAL} succeeded ==="

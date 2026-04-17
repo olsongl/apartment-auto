@@ -1,0 +1,12 @@
+[2026-04-17 01:23:04] === Daily scraper run started ===
+[2026-04-17 01:23:04] [apartment.py] Attempt 1/5...
+Opening: Axis at Shady Grove Apartments
+  Found 29 unit cards in HTML
+  → 29 units found
+  Waiting 5 seconds before next page...
+Traceback (most recent call last):
+  File "/Users/gavinolson/projs/wyzant scraper/apartment/apartment.py", line 173, in <module>
+    main()
+  File "/Users/gavinolson/projs/wyzant scraper/apartment/apartment.py", line 135, in main
+    time.sleep(5)
+KeyboardInterrupt
